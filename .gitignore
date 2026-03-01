@@ -13,4 +13,8 @@
 *.iml
 *.iws
 out/
-
+# Maven/Gradle
+target/
+*.jar
+*.war
+*.ear
