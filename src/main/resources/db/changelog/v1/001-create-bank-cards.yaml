@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-card-table
+      author: Kirill
+      changes:
+        - createTable:
+            tableName: bank_cards
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: expire
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    checkConstraint: "status IN ('Активна', 'Заблокирована', 'Истек срок')"
+                  defaultValue: "'Active'"
+              - column:
+                  name: balance
+                  type: decimal(15,2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: "balance >= 0"
+                  defaultValue: "0.00"
+              - column:
+                  name: number_last4
+                  type: varchar(4)
+                  constraints:
+                    nullable: false
+                    checkConstraint: "number_last4 ~ '^[0-9]{4}$'"
+              - column:
+                  name: number_hash
+                  type: bytea
+                  constraints:
+                    nullable: false

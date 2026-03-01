@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: v1/001-create-bank-cards.yaml
+      relativeToChangelogFile: true
