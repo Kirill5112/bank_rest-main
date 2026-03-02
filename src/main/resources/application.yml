@@ -24,5 +24,13 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  mvc:
+    contentnegotiation:
+      media-types:
+        json: application/json
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
 server:
   port: 8080
