@@ -2,3 +2,12 @@ databaseChangeLog:
   - include:
       file: v1/001-create-bank-cards.yaml
       relativeToChangelogFile: true
+  - include:
+      file: v1/002-create-users-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1/003-create-roles-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1/004-create-user-roles.yaml
+      relativeToChangelogFile: true
