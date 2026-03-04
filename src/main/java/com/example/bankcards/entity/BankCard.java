@@ -11,9 +11,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -28,12 +25,7 @@ import static com.example.bankcards.enums.CardStatus.EXPIRED;
 @Entity
 @Table(name = "bank_cards")
 @Getter
-public class BankCard {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
+public class BankCard extends BaseEntity{
     @Convert(converter = YearMonthAttributeConverter.class)
     @Column(name = "expire", nullable = false)
     private YearMonth expire;
@@ -55,19 +47,18 @@ public class BankCard {
     @Column(name = "number_hash", nullable = false, unique = true)
     private byte[] numberHash;
 
-    public void changeBalance(BigDecimal difference) {
+    public void setBalance(BigDecimal changedBalance) {
         //Срок истёк или попытка списания с заблокированной карты
-        if (status == EXPIRED || (status == BLOCKED && difference.compareTo(BigDecimal.ZERO) < 0))
-            throw new IllegalBalanceChange(status, id);
-        BigDecimal changedBalance = balance.add(difference);
+        if (status == EXPIRED || (status == BLOCKED && changedBalance.compareTo(this.balance) < 0))
+            throw new IllegalBalanceChange(status, super.getId());
         if (changedBalance.compareTo(BigDecimal.ZERO) < 0)
-            throw new IllegalBalanceChange(id);
+            throw new IllegalBalanceChange(super.getId());
         balance = changedBalance;
     }
 
     public void setExpire(YearMonth newExpire) {
         if (expire != null && newExpire.isBefore(expire))
-            throw new IllegalExpireChange(id);
+            throw new IllegalExpireChange(super.getId());
         expire = newExpire;
     }
 
