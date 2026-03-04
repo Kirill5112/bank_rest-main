@@ -20,6 +20,7 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+    open-in-view: false
 
   liquibase:
     enabled: true
@@ -32,5 +33,17 @@ spring:
   jackson:
     deserialization:
       fail-on-unknown-properties: false
+
 server:
   port: 8080
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+secret:
+  key: 6++K7214ozh8g2Xxw71+4ULUVJ/Cbu/91RVqCkALErf/zzX22LE2aLAnhFuhFh+VpgpH4kvKxXr0ploPHZ79gw==
+  access-token-expiration: 86400000 # 1 день

@@ -3,6 +3,7 @@ package com.example.bankcards.controller;
 import com.example.bankcards.dto.BankCardRequestDto;
 import com.example.bankcards.dto.BankCardResponseDto;
 import com.example.bankcards.service.BankCardService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/cards")
+@SecurityRequirement(name = "Bearer Authentication")
 @RequiredArgsConstructor
 public class BankCardController {
     private final BankCardService service;
