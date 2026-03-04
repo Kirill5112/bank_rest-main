@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-user-roles
+      author: Kirill
+      changes:
+        - addColumn:
+            tableName: bank_cards
+            columns:
+              - column:
+                  name: owner
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: users(id)
+                    foreignKeyName: fk_user_cards
+                    deleteCascade: true

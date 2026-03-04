@@ -1,8 +1,6 @@
 package com.example.bankcards.util;
 
 
-import com.example.bankcards.entity.User;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

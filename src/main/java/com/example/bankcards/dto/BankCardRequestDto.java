@@ -17,4 +17,5 @@ public class BankCardRequestDto {
     @JsonFormat(pattern = "yyyy-MM")
     private YearMonth expire;
     private CardStatus status;
+    private Long ownerId;
 }

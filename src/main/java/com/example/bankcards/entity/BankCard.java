@@ -35,6 +35,10 @@ public class BankCard extends BaseEntity{
     @Setter
     private CardStatus status;
 
+    @Column(name = "owner", nullable = false)
+    @Setter
+    private Long ownerId;
+
     @Column(name = "balance", nullable = false, precision = 15, scale = 2)
     private BigDecimal balance;
 
@@ -68,6 +72,6 @@ public class BankCard extends BaseEntity{
         numberLast4 = numberData.numberLast4();
         numberHash = numberData.numberHash();
         maskedNumber = numberData.maskedNumber();
-        balance = new BigDecimal("0.00");
+        balance = new BigDecimal("100000.00");
     }
 }

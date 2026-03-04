@@ -22,4 +22,5 @@ public class BankCardResponseDto {
     private BigDecimal balance;
     private String numberLast4;
     private String maskedNumber;
+    private Long ownerId;
 }

@@ -11,3 +11,6 @@ databaseChangeLog:
   - include:
       file: v1/004-create-user-roles.yaml
       relativeToChangelogFile: true
+  - include:
+      file: v1/005-add-owner-to-bank-card.yaml
+      relativeToChangelogFile: true
