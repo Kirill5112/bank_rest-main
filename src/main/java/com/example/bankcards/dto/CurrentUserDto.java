@@ -1,16 +1,16 @@
 package com.example.bankcards.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Setter
 @Getter
-@NoArgsConstructor
-public class UserResponseDto {
+public class CurrentUserDto {
     private String username;
     private String firstName;
     private String lastName;
     private String middleName;
-    private boolean enabled;
+    private BigDecimal fullBalance;
 }

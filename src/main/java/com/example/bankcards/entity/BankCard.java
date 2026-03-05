@@ -1,8 +1,9 @@
 package com.example.bankcards.entity;
 
 import com.example.bankcards.enums.CardStatus;
-import com.example.bankcards.exception.IllegalBalanceChange;
-import com.example.bankcards.exception.IllegalExpireChange;
+import com.example.bankcards.exception.IllegalBalanceChangeException;
+import com.example.bankcards.exception.IllegalExpireChangeException;
+import com.example.bankcards.exception.NegativeBalanceException;
 import com.example.bankcards.util.CardNumberData;
 import com.example.bankcards.util.CardNumberGenerator;
 import com.example.bankcards.util.YearMonthAttributeConverter;
@@ -54,15 +55,15 @@ public class BankCard extends BaseEntity{
     public void setBalance(BigDecimal changedBalance) {
         //Срок истёк или попытка списания с заблокированной карты
         if (status == EXPIRED || (status == BLOCKED && changedBalance.compareTo(this.balance) < 0))
-            throw new IllegalBalanceChange(status, super.getId());
+            throw new IllegalBalanceChangeException(status, super.getId());
         if (changedBalance.compareTo(BigDecimal.ZERO) < 0)
-            throw new IllegalBalanceChange(super.getId());
+            throw new NegativeBalanceException(balance);
         balance = changedBalance;
     }
 
     public void setExpire(YearMonth newExpire) {
         if (expire != null && newExpire.isBefore(expire))
-            throw new IllegalExpireChange(super.getId());
+            throw new IllegalExpireChangeException(super.getId());
         expire = newExpire;
     }
 

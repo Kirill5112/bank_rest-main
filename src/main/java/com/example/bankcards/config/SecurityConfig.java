@@ -21,6 +21,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
+    //todo roles access
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

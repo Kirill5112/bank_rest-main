@@ -1,14 +1,13 @@
 package com.example.bankcards.controller;
 
-import com.example.bankcards.dto.UserLoginDto;
-import com.example.bankcards.dto.UserRegisterDto;
+import com.example.bankcards.dto.LoginDto;
+import com.example.bankcards.dto.RegisterDto;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.ResourceNotFoundException;
 import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.security.JwtService;
-import com.example.bankcards.util.PhoneNormalizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,7 +37,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public void register(@RequestBody UserRegisterDto dto){
+    public void register(@RequestBody RegisterDto dto){
         User user = mapper.map(dto, User.class);
         Role role = roleRepo.findByName("USER")
                 .orElseThrow(() -> new ResourceNotFoundException("Role", "USER"));
@@ -48,17 +47,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginDto request) {
-        String username = PhoneNormalizer.normalizePhone(request.getUsername());
+    public ResponseEntity<?> login(@RequestBody LoginDto request) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, request.getPassword())
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             log.info("Security good successful");
-            String token = jwtService.generateToken(username);
+            String token = jwtService.generateToken(request.getUsername());
             return ResponseEntity.ok().body(Map.of("token", "Bearer " + token));
         } catch (Exception e) {
-            log.error("Security authorization failed: " + e.getMessage());
+            log.error("Security authorization failed: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }

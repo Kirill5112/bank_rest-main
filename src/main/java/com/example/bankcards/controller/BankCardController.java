@@ -1,10 +1,13 @@
 package com.example.bankcards.controller;
 
-import com.example.bankcards.dto.BankCardRequestDto;
+import com.example.bankcards.dto.BankCardCreateDto;
 import com.example.bankcards.dto.BankCardResponseDto;
+import com.example.bankcards.dto.BankCardUpdateDto;
 import com.example.bankcards.service.BankCardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/cards")
@@ -30,18 +31,18 @@ public class BankCardController {
         return service.getBankCardById(id);
     }
 
-    @GetMapping("/all")
-    public List<BankCardResponseDto> getAllCards() {
-        return service.getAll();
+    @GetMapping
+    public Page<BankCardResponseDto> getCards(Pageable pageable) {
+        return service.getCards(pageable);
     }
 
     @PostMapping
-    public BankCardResponseDto createBankCard(@RequestBody BankCardRequestDto dto) {
+    public BankCardResponseDto createBankCard(@RequestBody BankCardCreateDto dto) {
         return service.createBankCard(dto);
     }
 
     @PutMapping("/{id}")
-    public BankCardResponseDto updateBankCard(@PathVariable Long id, @RequestBody BankCardRequestDto dto) {
+    public BankCardResponseDto updateBankCard(@PathVariable Long id, @RequestBody BankCardUpdateDto dto) {
         return service.updateBankCard(id, dto);
     }
 
