@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 004-create-user-roles
+      id: 005-add-owner-to-bank-card
       author: Kirill
       changes:
         - addColumn:
