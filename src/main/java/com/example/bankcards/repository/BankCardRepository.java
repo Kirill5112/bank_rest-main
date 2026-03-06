@@ -13,14 +13,14 @@ public interface BankCardRepository extends JpaRepository<BankCard, Long> {
     @Query("""
 select card
 from BankCard card where
-card.ownerId = :ownerId AND (
+card.owner = :owner AND (
 card.numberLast4 ILIKE concat('%', :search, '%') OR
 cast(card.balance as string) ILIKE concat('%', :search, '%') OR
 cast(card.expire as string) ILIKE concat('%', :search, '%') OR
 cast(card.status as string) ILIKE concat('%', :search, '%'))""")
-    Page<BankCard> findByOwnerIdWithSearch(Long ownerId, Pageable pageable, String search);
+    Page<BankCard> findByOwnerIdWithSearch(String owner, Pageable pageable, String search);
 
-    Page<BankCard> findByOwnerId(Long ownerId, Pageable pageable);
+    Page<BankCard> findByOwner(String owner, Pageable pageable);
 
-    List<BankCard> findByOwnerId(Long ownerId);
+    List<BankCard> findByOwner(String owner);
 }

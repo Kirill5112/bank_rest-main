@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.YearMonth;
+
 @Service
 @RequiredArgsConstructor
 public class BankCardService {
@@ -20,6 +22,7 @@ public class BankCardService {
 
     public BankCardResponseDto createBankCard(BankCardCreateDto dto) {
         BankCard card = mapper.map(dto, BankCard.class);
+        card.increaseExpire(dto.getExpire());
         return mapper.map(repo.save(card), BankCardResponseDto.class);
     }
 
@@ -40,6 +43,8 @@ public class BankCardService {
                 new ResourceNotFoundException("BankCard", id.toString()));
 
         mapper.map(dto, model);
+        YearMonth newExpire = dto.getExpire();
+        if (newExpire != null) model.increaseExpire(newExpire);
         model = repo.save(model);
         return mapper.map(model, BankCardResponseDto.class);
     }

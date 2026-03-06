@@ -19,5 +19,5 @@ public class BankCardResponseDto {
     private CardStatus status;
     private BigDecimal balance;
     private String maskedNumber;
-    private Long ownerId;
+    private String owner;
 }

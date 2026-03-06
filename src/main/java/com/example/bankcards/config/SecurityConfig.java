@@ -4,7 +4,6 @@ import com.example.bankcards.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,7 +21,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-    //todo roles access
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,7 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/login", "/api/register", "/login", "/register")
                         .permitAll()
                         .requestMatchers("api/cards/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "api/users/current", "api/users/current/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("api/users/current", "api/users/current/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("api/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

@@ -5,6 +5,7 @@ import com.example.bankcards.dto.BankCardResponseDto;
 import com.example.bankcards.dto.BankCardUpdateDto;
 import com.example.bankcards.service.BankCardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,12 +38,12 @@ public class BankCardController {
     }
 
     @PostMapping
-    public BankCardResponseDto createBankCard(@RequestBody BankCardCreateDto dto) {
+    public BankCardResponseDto createBankCard(@RequestBody @Valid BankCardCreateDto dto) {
         return service.createBankCard(dto);
     }
 
     @PutMapping("/{id}")
-    public BankCardResponseDto updateBankCard(@PathVariable Long id, @RequestBody BankCardUpdateDto dto) {
+    public BankCardResponseDto updateBankCard(@PathVariable Long id, @Valid @RequestBody BankCardUpdateDto dto) {
         return service.updateBankCard(id, dto);
     }
 

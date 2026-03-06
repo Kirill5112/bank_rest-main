@@ -40,6 +40,11 @@ public class UserController {
         return userService.getUserCards(principal, pageable, search);
     }
 
+    @PutMapping("/current/{cardId}")
+    public boolean blockCurrentCard(Principal principal, @PathVariable Long cardId){
+        return userService.blockCurrentCard(principal, cardId);
+    }
+
     @GetMapping("/current")
     public CurrentUserDto getCurrent(Principal principal) {
         return userService.getCurrent(principal);

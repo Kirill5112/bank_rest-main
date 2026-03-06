@@ -5,6 +5,8 @@ import com.example.bankcards.dto.CurrentUserDto;
 import com.example.bankcards.dto.UserResponseDto;
 import com.example.bankcards.entity.BankCard;
 import com.example.bankcards.entity.User;
+import com.example.bankcards.enums.CardStatus;
+import com.example.bankcards.exception.BlockingNotOwnCardException;
 import com.example.bankcards.exception.ResourceNotFoundException;
 import com.example.bankcards.repository.BankCardRepository;
 import com.example.bankcards.repository.UserRepository;
@@ -18,7 +20,7 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
-import static com.example.bankcards.util.SessionUserHelper.getSessionUser;
+import static com.example.bankcards.util.SessionUserHelper.getSessionUsername;
 
 @Service
 @RequiredArgsConstructor
@@ -32,27 +34,15 @@ public class UserService {
                 map(user -> mapper.map(user, UserResponseDto.class));
     }
 
-    public Page<BankCardResponseDto> getUserCards(
-            Principal principal, Pageable pageable, String search) {
-
-        User user = getSessionUser(principal);
-        Long userId = user.getId();
-        Page<BankCard> cards = search == null ?
-                cardsRepo.findByOwnerId(userId, pageable) :
-                cardsRepo.findByOwnerIdWithSearch(userId, pageable, search);
-        return cards.map(bankCard ->
-                mapper.map(bankCard, BankCardResponseDto.class));
-    }
-
     public UserResponseDto getUserById(Long id) {
         User user = userRepo.findById(id).orElseThrow(() ->
-        new ResourceNotFoundException("User", id.toString()));
+                new ResourceNotFoundException("User", id.toString()));
         return mapper.map(user, UserResponseDto.class);
     }
 
     public boolean toggleEnabledUser(Long id) {
         User model = userRepo.findById(id).orElseThrow(() ->
-        new ResourceNotFoundException("User", id.toString()));
+                new ResourceNotFoundException("User", id.toString()));
         model.setEnabled(!model.isEnabled());
         userRepo.save(model);
         return model.isEnabled();
@@ -64,10 +54,12 @@ public class UserService {
     }
 
     public CurrentUserDto getCurrent(Principal principal) {
-        User user = getSessionUser(principal);
+        String username = getSessionUsername(principal);
+        User user = userRepo.findByUsername(username).orElseThrow(() ->
+                new ResourceNotFoundException("User", username));
         CurrentUserDto current = mapper.map(user, CurrentUserDto.class);
         BigDecimal fullBalance = BigDecimal.ZERO;
-        List<BankCard> cards = cardsRepo.findByOwnerId(user.getId());
+        List<BankCard> cards = cardsRepo.findByOwner(username);
         for (BankCard card : cards) {
             fullBalance = fullBalance.add(card.getBalance());
         }
@@ -75,4 +67,27 @@ public class UserService {
         return current;
     }
 
+    public Page<BankCardResponseDto> getUserCards(
+            Principal principal, Pageable pageable, String search) {
+
+        String username = getSessionUsername(principal);
+        Page<BankCard> cards = search == null ?
+                cardsRepo.findByOwner(username, pageable) :
+                cardsRepo.findByOwnerIdWithSearch(username, pageable, search);
+        return cards.map(bankCard ->
+                mapper.map(bankCard, BankCardResponseDto.class));
+    }
+
+    public boolean blockCurrentCard(Principal principal, Long cardId) {
+        String username = getSessionUsername(principal);
+        BankCard card = cardsRepo.findById(cardId).orElseThrow(() ->
+                new ResourceNotFoundException("BankCard", cardId.toString()));
+        if (!card.getOwner().equals(username))
+            throw new BlockingNotOwnCardException();
+        if (card.getStatus() != CardStatus.BLOCKED) {
+            card.setStatus(CardStatus.BLOCKED);
+            cardsRepo.save(card);
+        }
+        return true;
+    }
 }

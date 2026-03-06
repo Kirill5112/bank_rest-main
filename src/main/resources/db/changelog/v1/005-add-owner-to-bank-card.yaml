@@ -8,9 +8,9 @@ databaseChangeLog:
             columns:
               - column:
                   name: owner
-                  type: bigint
+                  type: varchar(12)
                   constraints:
                     nullable: false
-                    references: users(id)
+                    references: users(username)
                     foreignKeyName: fk_user_cards
                     deleteCascade: true

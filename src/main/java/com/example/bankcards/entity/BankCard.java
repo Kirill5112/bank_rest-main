@@ -2,7 +2,7 @@ package com.example.bankcards.entity;
 
 import com.example.bankcards.enums.CardStatus;
 import com.example.bankcards.exception.IllegalBalanceChangeException;
-import com.example.bankcards.exception.IllegalExpireChangeException;
+import com.example.bankcards.exception.ReducingExpireException;
 import com.example.bankcards.exception.NegativeBalanceException;
 import com.example.bankcards.util.CardNumberData;
 import com.example.bankcards.util.CardNumberGenerator;
@@ -36,9 +36,8 @@ public class BankCard extends BaseEntity{
     @Setter
     private CardStatus status;
 
-    @Column(name = "owner", nullable = false)
-    @Setter
-    private Long ownerId;
+    @Column(name = "owner", nullable = false, length = 12)
+    private String owner;
 
     @Column(name = "balance", nullable = false, precision = 15, scale = 2)
     private BigDecimal balance;
@@ -61,9 +60,15 @@ public class BankCard extends BaseEntity{
         balance = changedBalance;
     }
 
-    public void setExpire(YearMonth newExpire) {
+    public void setOwner(String owner){
+        User u = new User();
+        u.setUsername(owner);
+        this.owner = u.getUsername();
+    }
+
+    public void increaseExpire(YearMonth newExpire) {
         if (expire != null && newExpire.isBefore(expire))
-            throw new IllegalExpireChangeException(super.getId());
+            throw new ReducingExpireException(super.getId());
         expire = newExpire;
     }
 

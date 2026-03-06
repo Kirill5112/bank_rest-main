@@ -1,6 +1,5 @@
 package com.example.bankcards.security;
 
-import com.example.bankcards.entity.User;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -21,9 +20,6 @@ public class JwtService {
     private Long tokenExp;
 
     public String generateToken(String username) {
-        User user = new User();
-        user.setUsername(username);
-        username = user.getUsername();
         Key key = getKeyFromSecret();
         return Jwts.builder()
                 .claim("sub", username)
