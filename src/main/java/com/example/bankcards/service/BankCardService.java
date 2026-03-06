@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
 
+import static com.example.bankcards.util.PhoneNormalizer.normalizePhone;
+
 @Service
 @RequiredArgsConstructor
 public class BankCardService {
@@ -23,6 +25,7 @@ public class BankCardService {
     public BankCardResponseDto createBankCard(BankCardCreateDto dto) {
         BankCard card = mapper.map(dto, BankCard.class);
         card.increaseExpire(dto.getExpire());
+        card.setOwner(normalizePhone(dto.getOwner()));
         return mapper.map(repo.save(card), BankCardResponseDto.class);
     }
 

@@ -1,5 +1,7 @@
 package com.example.bankcards.util;
 
+import com.example.bankcards.exception.IncorrectPhoneNumberException;
+
 import java.util.regex.Pattern;
 
 public class PhoneNormalizer {
@@ -11,7 +13,7 @@ public class PhoneNormalizer {
                 .replaceFirst("^8", "7")  // 8→7
                 .replaceFirst("^(\\d{10})$", "7$1");
         if (!pattern.matcher(normPhone).matches())
-            throw new IllegalArgumentException("Incorrect phone number: " + phone);
+            throw new IncorrectPhoneNumberException(phone);
         return normPhone;
     }
 }

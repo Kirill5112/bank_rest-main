@@ -3,6 +3,7 @@ package com.example.bankcards.service;
 import com.example.bankcards.dto.LoginRequestDto;
 import com.example.bankcards.dto.LoginResponseDto;
 import com.example.bankcards.dto.RegisterDto;
+import com.example.bankcards.dto.UserResponseDto;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.ResourceNotFoundException;
@@ -16,7 +17,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import static com.example.bankcards.util.PhoneNormalizer.normalizePhone;
 
 @Service
 @RequiredArgsConstructor
@@ -30,23 +32,24 @@ public class AuthService {
     private final ModelMapper mapper;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public void register(RegisterDto dto) {
+    public UserResponseDto register(RegisterDto dto) {
         User user = mapper.map(dto, User.class);
         Role role = roleRepo.findByName("USER")
                 .orElseThrow(() -> new ResourceNotFoundException("Role", "USER"));
         user.getRoles().add(role);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        userRepo.save(user);
+        user = userRepo.save(user);
         log.info("User registered: {}", dto.getUsername());
+        return mapper.map(user, UserResponseDto.class);
     }
 
     public LoginResponseDto login(LoginRequestDto request) {
+        String username = normalizePhone(request.getUsername());
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(username, request.getPassword())
         );
-        log.info("User {} successfully authenticated", request.getUsername());
-        String token = jwtService.generateToken(request.getUsername());
+        log.info("User {} successfully authenticated", username);
+        String token = jwtService.generateToken(username);
         return new LoginResponseDto("Bearer " + token);
     }
 }

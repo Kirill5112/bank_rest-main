@@ -37,6 +37,7 @@ public class BankCard extends BaseEntity{
     private CardStatus status;
 
     @Column(name = "owner", nullable = false, length = 12)
+    @Setter
     private String owner;
 
     @Column(name = "balance", nullable = false, precision = 15, scale = 2)
@@ -58,12 +59,6 @@ public class BankCard extends BaseEntity{
         if (changedBalance.compareTo(BigDecimal.ZERO) < 0)
             throw new NegativeBalanceException(balance);
         balance = changedBalance;
-    }
-
-    public void setOwner(String owner){
-        User u = new User();
-        u.setUsername(owner);
-        this.owner = u.getUsername();
     }
 
     public void increaseExpire(YearMonth newExpire) {

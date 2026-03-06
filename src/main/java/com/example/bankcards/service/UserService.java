@@ -40,12 +40,12 @@ public class UserService {
         return mapper.map(user, UserResponseDto.class);
     }
 
-    public boolean toggleEnabledUser(Long id) {
+    public UserResponseDto toggleEnabledUser(Long id) {
         User model = userRepo.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("User", id.toString()));
         model.setEnabled(!model.isEnabled());
-        userRepo.save(model);
-        return model.isEnabled();
+        model = userRepo.save(model);
+        return mapper.map(model, UserResponseDto.class);
     }
 
 
@@ -78,7 +78,7 @@ public class UserService {
                 mapper.map(bankCard, BankCardResponseDto.class));
     }
 
-    public boolean blockCurrentCard(Principal principal, Long cardId) {
+    public BankCardResponseDto blockCurrentCard(Principal principal, Long cardId) {
         String username = getSessionUsername(principal);
         BankCard card = cardsRepo.findById(cardId).orElseThrow(() ->
                 new ResourceNotFoundException("BankCard", cardId.toString()));
@@ -86,8 +86,8 @@ public class UserService {
             throw new BlockingNotOwnCardException();
         if (card.getStatus() != CardStatus.BLOCKED) {
             card.setStatus(CardStatus.BLOCKED);
-            cardsRepo.save(card);
+            card = cardsRepo.save(card);
         }
-        return true;
+        return mapper.map(card, BankCardResponseDto.class);
     }
 }

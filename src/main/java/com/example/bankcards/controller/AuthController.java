@@ -3,6 +3,7 @@ package com.example.bankcards.controller;
 import com.example.bankcards.dto.LoginRequestDto;
 import com.example.bankcards.dto.LoginResponseDto;
 import com.example.bankcards.dto.RegisterDto;
+import com.example.bankcards.dto.UserResponseDto;
 import com.example.bankcards.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDto dto) {
-        authService.register(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserResponseDto> register(@RequestBody @Valid RegisterDto dto) {
+        UserResponseDto u = authService.register(dto);
+        return ResponseEntity.ok(u);
     }
 
     @PostMapping("/login")
