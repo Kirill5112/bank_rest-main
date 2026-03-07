@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class TransferDto {
+public class TransferRequestDto {
     @NotNull
     @Min(value = 1L, message = "id > 0")
     private Long payerId;
@@ -18,5 +18,5 @@ public class TransferDto {
     private Long payeeId;
     @NotNull(message = "Enter sum of transfer")
     @Min(value = 10L, message = "minimum sum is 10")
-    private BigDecimal sum;
+    private BigDecimal amount;
 }

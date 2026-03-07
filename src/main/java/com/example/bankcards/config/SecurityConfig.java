@@ -4,6 +4,7 @@ import com.example.bankcards.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -34,8 +35,13 @@ public class SecurityConfig {
 
                         .requestMatchers("api/users/current", "api/users/current/**")
                         .hasAnyRole("ADMIN", "USER")
-
                         .requestMatchers("api/users/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,"api/transfers/current",
+                                "api/transfers/current/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "api/transfers", "api/transfers/*")
+                        .hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

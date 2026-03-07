@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         int status = switch (exName) {
             case "IncorrectPhoneNumberException", "NegativeBalanceException" -> 400;
             case "AuthenticationMismatchException", "BlockingNotOwnCardException",
-                 "IllegalTransferException" -> 403;
+                 "IllegalTransferException", "AccessDeniedException" -> 403;
             case "IllegalBalanceChangeException", "ReducingExpireException" -> 409;
             case "ResourceNotFoundException" -> 404;
             default -> 400;
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
         String errorType = switch (exName) {
             case "IncorrectPhoneNumberException", "NegativeBalanceException" -> "Validation Error";
             case "AuthenticationMismatchException", "BlockingNotOwnCardException",
-                 "IllegalTransferException" -> "Access Denied";
+                 "IllegalTransferException", "AccessDeniedException" -> "Access Denied";
             case "IllegalBalanceChangeException", "ReducingExpireException" -> "Conflict";
             case "ResourceNotFoundException" -> "Not Found";
             default -> "Business Error";
