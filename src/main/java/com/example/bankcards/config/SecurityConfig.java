@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,18 +27,26 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/register")
+                        .requestMatchers("/api/login", "/api/register",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml",
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/swagger-ui.html",
+                                "/configuration/ui",
+                                "/configuration/security")
                         .permitAll()
 
-                        .requestMatchers("api/cards/**").hasRole("ADMIN")
+                        .requestMatchers("/api/cards/**").hasRole("ADMIN")
 
-                        .requestMatchers("api/users/current", "api/users/current/**")
+                        .requestMatchers("/api/users/current", "/api/users/current/**")
                         .hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("api/users/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET,"api/transfers/current",
-                                "api/transfers/current/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "api/transfers", "api/transfers/*")
+                        .requestMatchers(HttpMethod.GET,"/api/transfers/current",
+                                "/api/transfers/current/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/transfers", "/api/transfers/*")
                         .hasRole("ADMIN")
 
                         .anyRequest().authenticated()
@@ -63,19 +70,6 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-                "/v3/api-docs/**",
-                "/swagger-ui/**",
-                "/swagger-resources/**",
-                "/webjars/**",
-                "/swagger-ui.html",
-                "/configuration/ui",
-                "/configuration/security"
-        );
     }
 
     @Bean

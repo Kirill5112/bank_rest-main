@@ -1,1 +1,616 @@
-# Здесь будет OpenAPI описание всех доступных эндпоинтов и моделей данных.
+openapi: 3.1.0
+info:
+  title: My API
+  version: "1.0"
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/users/{userId}/toggleEnabled:
+    put:
+      tags:
+      - user-controller
+      operationId: toggleEnabled
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/users/current/{cardId}:
+    put:
+      tags:
+      - user-controller
+      summary: Block own card
+      operationId: blockCurrentCard
+      parameters:
+      - name: cardId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BankCardResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/cards/{id}:
+    get:
+      tags:
+      - bank-card-controller
+      operationId: getBankCardById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BankCardResponseDto"
+      security:
+      - Bearer Authentication: []
+    put:
+      tags:
+      - bank-card-controller
+      operationId: updateBankCard
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankCardUpdateDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BankCardResponseDto"
+      security:
+      - Bearer Authentication: []
+    delete:
+      tags:
+      - bank-card-controller
+      operationId: deleteBankCard
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer Authentication: []
+  /api/transfers:
+    get:
+      tags:
+      - transfer-controller
+      operationId: getTransfers
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelTransferResponseDto"
+      security:
+      - Bearer Authentication: []
+    post:
+      tags:
+      - transfer-controller
+      operationId: transfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferRequestDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TransferResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/register:
+    post:
+      tags:
+      - auth-controller
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDto"
+  /api/login:
+    post:
+      tags:
+      - auth-controller
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequestDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/cards:
+    get:
+      tags:
+      - bank-card-controller
+      summary: Get all cards paginated
+      operationId: getCards
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelBankCardResponseDto"
+      security:
+      - Bearer Authentication: []
+    post:
+      tags:
+      - bank-card-controller
+      operationId: createBankCard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankCardCreateDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BankCardResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/users:
+    get:
+      tags:
+      - user-controller
+      summary: Get all users paginated
+      operationId: getUsers
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelUserResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/users/{userId}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDto"
+      security:
+      - Bearer Authentication: []
+    delete:
+      tags:
+      - user-controller
+      operationId: deleteUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer Authentication: []
+  /api/users/current:
+    get:
+      tags:
+      - user-controller
+      operationId: getCurrent
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CurrentUserDto"
+      security:
+      - Bearer Authentication: []
+  /api/users/current/cards:
+    get:
+      tags:
+      - user-controller
+      summary: Get own cards with optional search
+      operationId: getUserCards
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelBankCardResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/transfers/{id}:
+    get:
+      tags:
+      - transfer-controller
+      operationId: getTransferById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TransferResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/transfers/current:
+    get:
+      tags:
+      - transfer-controller
+      operationId: getCurrentTransfers
+      parameters:
+      - name: p
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelTransferResponseDto"
+      security:
+      - Bearer Authentication: []
+  /api/transfers/current/{id}:
+    get:
+      tags:
+      - transfer-controller
+      operationId: getCurrentTransferById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TransferResponseDto"
+      security:
+      - Bearer Authentication: []
+components:
+  schemas:
+    UserResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        enabled:
+          type: boolean
+    BankCardResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        expire:
+          type: string
+          description: YYYY-MM
+          example: 2026-12
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - BLOCKED
+          - EXPIRED
+        balance:
+          type: number
+        maskedNumber:
+          type: string
+        owner:
+          type: string
+    BankCardUpdateDto:
+      type: object
+      properties:
+        expire:
+          type: string
+          description: YYYY-MM
+          example: 2026-12
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - BLOCKED
+          - EXPIRED
+    TransferRequestDto:
+      type: object
+      properties:
+        payerId:
+          type: integer
+          format: int64
+          minimum: 1
+        payeeId:
+          type: integer
+          format: int64
+          minimum: 1
+        amount:
+          type: number
+          minimum: 10
+      required:
+      - amount
+      - payeeId
+      - payerId
+    TransferResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        payerMask:
+          type: string
+        payeeMask:
+          type: string
+        amount:
+          type: number
+        created:
+          type: string
+          format: date-time
+    RegisterDto:
+      type: object
+      properties:
+        username:
+          type: string
+          description: phone number
+          examples:
+          - 8 444 555 12 54
+          - "+71234561234"
+          - 7 (783) 123-45-67
+          maxLength: 2147483647
+          minLength: 10
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        middleName:
+          type: string
+        password:
+          type: string
+          maxLength: 2147483647
+          minLength: 5
+      required:
+      - firstName
+      - lastName
+      - password
+    LoginRequestDto:
+      type: object
+      properties:
+        username:
+          type: string
+          description: phone number
+          examples:
+          - 8 444 555 12 54
+          - "+71234561234"
+          - 7 (783) 123-45-67
+          maxLength: 2147483647
+          minLength: 10
+        password:
+          type: string
+    BankCardCreateDto:
+      type: object
+      properties:
+        expire:
+          type: string
+          description: YYYY-MM
+          example: 2026-12
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - BLOCKED
+          - EXPIRED
+        owner:
+          type: string
+          description: phone number
+          examples:
+          - 8 444 555 12 54
+          - "+71234561234"
+          - 7 (783) 123-45-67
+      required:
+      - expire
+      - owner
+    Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+        sort:
+          type: array
+          items:
+            type: string
+    PageMetadata:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int64
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int64
+    PagedModelUserResponseDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponseDto"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
+    CurrentUserDto:
+      type: object
+      properties:
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        fullBalance:
+          type: number
+    PagedModelBankCardResponseDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/BankCardResponseDto"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
+    PagedModelTransferResponseDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransferResponseDto"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
+  securitySchemes:
+    Bearer Authentication:
+      type: http
+      description: Введите JWT токен (без Bearer)
+      scheme: bearer
+      bearerFormat: JWT

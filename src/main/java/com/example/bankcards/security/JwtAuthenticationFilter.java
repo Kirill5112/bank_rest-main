@@ -26,7 +26,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String HEADER_NAME = "Authorization";
     private static final List<String> OPEN_ROUTES = List.of(
-            "/api/login", "api/register", "login", "register");
+            "/api/login", "/api/register", "/login", "/register", "/v3/api-docs",
+            "/v3/api-docs.yaml",
+            "/v3/api-docs/",
+            "/swagger-ui",
+            "/swagger-ui/",
+            "/swagger-ui.html",
+            "/swagger-ui/index.html");
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtService jwtService;

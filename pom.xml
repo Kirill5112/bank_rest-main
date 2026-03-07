@@ -130,14 +130,23 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs</id>
+                        <phase>verify</phase>
+                        <goals><goal>generate</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <apiDocsUrl>http://localhost:8080/v3/api-docs.yaml</apiDocsUrl>
+                    <outputDir>${project.basedir}/docs</outputDir>
+                    <outputFileName>openapi.yaml</outputFileName>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
-        <!--
-        pom.xml — файл для управления зависимостями проекта.
-
-        Что нужно сделать:
-        - Указать зависимости: Spring Boot Starter Web, Spring Security, Spring Data JPA, Liquibase, JWT, Swagger, PostgreSQL/MySQL.
-        - Установить Java 17+ как используемую версию.
-        - Добавить плагины для компиляции и сборки (например, spring-boot-maven-plugin).
-        -->
