@@ -14,7 +14,10 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -26,6 +29,9 @@ import static com.example.bankcards.enums.CardStatus.EXPIRED;
 @Entity
 @Table(name = "bank_cards")
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BankCard extends BaseEntity{
     @Convert(converter = YearMonthAttributeConverter.class)
     @Column(name = "expire", nullable = false)

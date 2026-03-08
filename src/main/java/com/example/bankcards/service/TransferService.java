@@ -70,7 +70,7 @@ public class TransferService {
                 new ResourceNotFoundException("Transfer", id.toString()));
         String payerOwner = transfer.getPayer().getOwner();
         String payeeOwner = transfer.getPayee().getOwner();
-        if (!payerOwner.equals(username) && payeeOwner.equals(username))
+        if (!payerOwner.equals(username) && !payeeOwner.equals(username))
             throw new AccessDeniedException();
         return TransferResponseDto.builder()
                 .id(transfer.getId())
