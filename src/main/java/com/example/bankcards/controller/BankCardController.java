@@ -43,7 +43,7 @@ public class BankCardController {
     @PostMapping
     public ResponseEntity<BankCardResponseDto> createBankCard(@RequestBody @Valid BankCardCreateDto dto) {
         BankCardResponseDto created = service.createBankCard(dto);
-        return ResponseEntity.created(URI.create("api/cards/" + created.getId()))
+        return ResponseEntity.created(URI.create("/api/cards/" + created.getId()))
                 .body(created);
     }
 
