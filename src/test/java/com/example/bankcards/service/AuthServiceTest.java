@@ -62,6 +62,7 @@ public class AuthServiceTest {
         userRole = new Role();
         userRole.setName("USER");
         mappedUser = new User();
+        mappedUser.setUsername(correctPhone);
         loginRequestDto = new LoginRequestDto();
         loginRequestDto.setPassword("pass123");
     }
@@ -84,8 +85,8 @@ public class AuthServiceTest {
 
     @Test
     void register_ThrowsIncorrectPhoneNumberException() {
+        mappedUser.setUsername(incorrectPhone);
         when(mapper.map(registerDto, User.class)).thenReturn(mappedUser);
-        registerDto.setUsername(incorrectPhone);
         assertThrows(IncorrectPhoneNumberException.class,
                 () -> authService.register(registerDto));
     }

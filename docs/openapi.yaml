@@ -10,6 +10,7 @@ paths:
     put:
       tags:
       - user-controller
+      description: "Требуемая роль: ADMIN"
       operationId: toggleEnabled
       parameters:
       - name: userId
@@ -53,6 +54,7 @@ paths:
     get:
       tags:
       - bank-card-controller
+      description: "Требуемая роль: ADMIN"
       operationId: getBankCardById
       parameters:
       - name: id
@@ -73,6 +75,7 @@ paths:
     put:
       tags:
       - bank-card-controller
+      description: "Требуемая роль: ADMIN"
       operationId: updateBankCard
       parameters:
       - name: id
@@ -99,6 +102,7 @@ paths:
     delete:
       tags:
       - bank-card-controller
+      description: "Требуемая роль: ADMIN"
       operationId: deleteBankCard
       parameters:
       - name: id
@@ -116,6 +120,7 @@ paths:
     get:
       tags:
       - transfer-controller
+      description: "Требуемая роль: ADMIN"
       operationId: getTransfers
       parameters:
       - name: pageable
@@ -191,7 +196,7 @@ paths:
     get:
       tags:
       - bank-card-controller
-      summary: Get all cards paginated
+      description: "Требуемая роль: ADMIN"
       operationId: getCards
       parameters:
       - name: pageable
@@ -211,6 +216,7 @@ paths:
     post:
       tags:
       - bank-card-controller
+      description: "Требуемая роль: ADMIN"
       operationId: createBankCard
       requestBody:
         content:
@@ -231,7 +237,7 @@ paths:
     get:
       tags:
       - user-controller
-      summary: Get all users paginated
+      description: "Требуемая роль: ADMIN"
       operationId: getUsers
       parameters:
       - name: pageable
@@ -252,6 +258,7 @@ paths:
     get:
       tags:
       - user-controller
+      description: "Требуемая роль: ADMIN"
       operationId: getUser
       parameters:
       - name: userId
@@ -272,6 +279,7 @@ paths:
     delete:
       tags:
       - user-controller
+      description: "Требуемая роль: ADMIN"
       operationId: deleteUser
       parameters:
       - name: userId
@@ -329,6 +337,7 @@ paths:
     get:
       tags:
       - transfer-controller
+      description: "Требуемая роль: ADMIN"
       operationId: getTransferById
       parameters:
       - name: id

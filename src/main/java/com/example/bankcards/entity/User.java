@@ -46,7 +46,7 @@ public class User extends BaseEntity {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public void setUsername(String username) {
-        this.username = PhoneNormalizer.normalizePhone(username);
+    public void normalizeUsername() {
+        username = PhoneNormalizer.normalizePhone(username);
     }
 }

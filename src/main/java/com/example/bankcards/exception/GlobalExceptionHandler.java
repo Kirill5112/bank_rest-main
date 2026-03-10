@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGeneric(Exception ex, WebRequest request) {
         log.error("Unhandled: ", ex);
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal error");
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         problem.setTitle("Internal Server Error");
         problem.setInstance(URI.create(request.getDescription(false)));
         return problem;

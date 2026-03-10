@@ -1,105 +1,116 @@
-<h1>🚀 Разработка Системы Управления Банковскими Картами</h1>
+# Bank Cards Control System
 
-<h2>📁 Стартовая структура</h2>
-  <p>
-    Проектная структура с директориями и описательными файлами (<code>README Controller.md</code>, <code>README Service.md</code> и т.д.) уже подготовлена.<br />
-    Все реализации нужно добавлять <strong>в соответствующие директории</strong>.
-  </p>
-  <p>
-    После завершения разработки <strong>временные README-файлы нужно удалить</strong>, чтобы они не попадали в итоговую сборку.
-  </p>
-  
-<h2>📝 Описание задачи</h2>
-  <p>Разработать backend-приложение на Java (Spring Boot) для управления банковскими картами:</p>
-  <ul>
-    <li>Создание и управление картами</li>
-    <li>Просмотр карт</li>
-    <li>Переводы между своими картами</li>
-  </ul>
+Backend-приложение для управления банковскими картами. Аутентификация JWT + Spring Security (роли), REST API с Swagger, PostgreSQL + Liquibase миграции, Spring Data JPA.
 
-<h2>💳 Атрибуты карты</h2>
-  <ul>
-    <li>Номер карты (зашифрован, отображается маской: <code>**** **** **** 1234</code>)</li>
-    <li>Владелец</li>
-    <li>Срок действия</li>
-    <li>Статус: Активна, Заблокирована, Истек срок</li>
-    <li>Баланс</li>
-  </ul>
+## Технологии
+- **Java 21**, Spring Boot 3.5.9
+- Spring Security, Data JPA, Web, Validation, Actuator
+- PostgreSQL, Liquibase (db/changelog/db.changelog-master.yaml)
+- JWT (jjwt 0.12.6), Swagger (springdoc-openapi 2.8.15)
+- Lombok, ModelMapper, PostgreSQL driver
 
-<h2>🧾 Требования</h2>
+## Предварительные требования
+- Docker & Docker Compose (20+)
+- Maven 3.8+ (Java 21)
+- Git
 
-<h3>✅ Аутентификация и авторизация</h3>
-  <ul>
-    <li>Spring Security + JWT</li>
-    <li>Роли: <code>ADMIN</code> и <code>USER</code></li>
-  </ul>
+## Установка
+1. Клонируйте:
+   :<br>
+   `git clone` https://github.com/Kirill5112/bank_rest-main.git <br>
+   `cd bank_rest-main`
 
-<h3>✅ Возможности</h3>
-<strong>Администратор:</strong>
-  <ul>
-    <li>Создаёт, блокирует, активирует, удаляет карты</li>
-    <li>Управляет пользователями</li>
-    <li>Видит все карты</li>
-  </ul>
+2. Соберите:<br>
+`mvn clean package -DskipTests` <br>
+*Генерирует JAR в `target/`
 
-<strong>Пользователь:</strong>
-  <ul>
-    <li>Просматривает свои карты (поиск + пагинация)</li>
-    <li>Запрашивает блокировку карты</li>
-    <li>Делает переводы между своими картами</li>
-    <li>Смотрит баланс</li>
-  </ul>
+## Запуск
+### С docker-compose (рекомендуется, с PostgreSQL)
 
-<h3>✅ API</h3>
-  <ul>
-    <li>CRUD для карт</li>
-    <li>Переводы между своими картами</li>
-    <li>Фильтрация и постраничная выдача</li>
-    <li>Валидация и сообщения об ошибках</li>
-  </ul>
+`docker-compose up -d --build`
 
-<h3>✅ Безопасность</h3>
-  <ul>
-    <li>Шифрование данных</li>
-    <li>Ролевой доступ</li>
-    <li>Маскирование номеров карт</li>
-  </ul>
+- **App**: http://localhost:8080
+- **Swagger API**: http://localhost:8080/swagger-ui.html
+- **Health check**: http://localhost:8080/actuator/health
+- **PostgreSQL**: localhost:5435 (DB: `banks_card_db`, user: `user`, pass: `passbcd`)
 
-<h3>✅ Работа с БД</h3>
-  <ul>
-    <li>PostgreSQL или MySQL</li>
-    <li>Миграции через Liquibase (<code>src/main/resources/db/migration</code>)</li>
-  </ul>
+Liquibase автоматически применит миграции при первом запуске.
 
-<h3>✅ Документация</h3>
-  <ul>
-    <li>Swagger UI / OpenAPI — <code>docs/openapi.yaml</code></li>
-    <li><code>README.md</code> с инструкцией запуска</li>
-  </ul>
+### Только app (внешняя БД)
+```
+docker build -t bank-app:latest.
+docker run -p 8080:8080
+-e SPRING_DATASOURCE_URL="jdbc:postgresql://host:5435/banks_card_db"
+bank-app:latest 
+```
 
-<h3>✅ Развёртывание и тестирование</h3>
-  <ul>
-    <li>Docker Compose для dev-среды</li>
-    <li>Liquibase миграции</li>
-    <li>Юнит-тесты ключевой бизнес-логики</li>
-  </ul>
+## Конфигурация (application.yml)
+```yaml
+spring:
+   datasource:
+      url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5435/banks_card_db}
+      username: ${SPRING_DATASOURCE_USERNAME:user}
+      password: ${SPRING_DATASOURCE_PASSWORD:passbcd}
 
-<h2>📊 Оценка</h2>
-  <ul>
-    <li>Соответствие требованиям</li>
-    <li>Чистота архитектуры и кода</li>
-    <li>Безопасность</li>
-    <li>Обработка ошибок</li>
-    <li>Покрытие тестами</li>
-    <li>ООП и уровни абстракции</li>
-  </ul>
+   jpa:
+      hibernate:
+         ddl-auto: validate  # Liquibase управляет схемой
 
-<h2>💡 Технологии</h2>
-  <p>
-    Java 17+, Spring Boot, Spring Security, Spring Data JPA, PostgreSQL/MySQL, Liquibase, Docker, JWT, Swagger (OpenAPI)
-  </p>
+   liquibase:
+      enabled: true
+      change-log: classpath:db/changelog/db.changelog-master.yaml
 
-<h2> 📤 Формат сдачи</h2>
-<p>
-Весь код и изменения принимаются только через git-репозиторий с открытым доступом к проекту. Отправка файлов в любом виде не принимается.
-  </p>
+server:
+   port: 8080
+
+springdoc:
+   swagger-ui:
+      path: /swagger-ui.html
+
+secret:
+   key: 6++K7214ozh8g2Xxw71+4ULUVJ/Cbu/91RVqCkALErf/zzX22LE2aLAnhFuhFh+VpgpH4kvKxXr0ploPHZ79gw==  # Измените в проде!
+   access-token-expiration: 86400000  # 1 день
+```
+
+
+## Переменные окружения (.env рекоменд.)
+| Переменная                   | По умолчанию / Описание                          |
+|------------------------------|--------------------------------------------------|
+| `SPRING_DATASOURCE_URL`      | `jdbc:postgresql://localhost:5435/banks_card_db` |
+| `SPRING_DATASOURCE_USERNAME` | `user`                                           |
+| `SPRING_DATASOURCE_PASSWORD` | `passbcd`                                        |
+| `SPRING_PROFILES_ACTIVE`     | `dev`                                            |
+| `SECRET_KEY`                 | Из application.yml (JWT)                         |
+
+Загрузка `.env`:" <br>
+
+`docker-compose --env-file .env up -d`
+
+## Дефолтный администратор (Liquibase)
+
+При первом запуске Liquibase применяет changeset `006-insert-admin-credentials.yaml`, который создаёт пользователя-администратора и привязывает ему роль admin:
+
+- Пользователь создаётся в таблице `users`
+- Роль назначается через таблицу `user_roles`
+
+Учётные данные администратора по умолчанию:
+- **Логин (username)**: `8 888 888 88 88` (в БД хранится как `78888888888`)
+- **Пароль**: `admin` (в БД хранится BCrypt-хэшом)
+
+Рекомендуется изменить эти данные в продакшене и/или отключить данный changeset после начальной инициализации.
+
+## Тестирование API
+- **Swagger**: Полная документация + тесты.
+- **Login**: POST `/api/auth/login` (JSON: `{"username": "...", "password": "..."}`) → JWT.
+- **Защищенные**: `/api/cards` (header: `Authorization: Bearer <token>`).
+- **Health**: `/actuator/health`.
+
+## Логи
+
+`docker-compose logs -f bank-app` <br>
+## Сброс данных
+`docker-compose down -v` 
+
+## Остановка и очистка
+`docker-compose down -v` # Удалить volumes (потеря данных!)<br>
+`docker system prune -f` # Очистка образов

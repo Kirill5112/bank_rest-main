@@ -1,5 +1,6 @@
 package com.example.bankcards.controller;
 
+import com.example.bankcards.annotation.AdminOnly;
 import com.example.bankcards.dto.TransferRequestDto;
 import com.example.bankcards.dto.TransferResponseDto;
 import com.example.bankcards.service.TransferService;
@@ -26,11 +27,13 @@ import java.security.Principal;
 public class TransferController {
     private final TransferService transferService;
 
+    @AdminOnly
     @GetMapping
     public Page<TransferResponseDto> getTransfers(Pageable pageable){
         return transferService.getAll(pageable);
     }
 
+    @AdminOnly
     @GetMapping("/{id}")
     public TransferResponseDto getTransferById (@PathVariable Long id){
         return transferService.getTransferById(id);

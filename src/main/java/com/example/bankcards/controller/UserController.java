@@ -1,5 +1,6 @@
 package com.example.bankcards.controller;
 
+import com.example.bankcards.annotation.AdminOnly;
 import com.example.bankcards.dto.BankCardResponseDto;
 import com.example.bankcards.dto.CurrentUserDto;
 import com.example.bankcards.dto.UserResponseDto;
@@ -27,7 +28,7 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "Get all users paginated")
+    @AdminOnly
     @GetMapping
     public Page<UserResponseDto> getUsers(Pageable pageable) {
         return userService.getUsers(pageable);
@@ -55,17 +56,20 @@ public class UserController {
         return userService.getCurrent(principal);
     }
 
+    @AdminOnly
     @GetMapping("/{userId}")
     public UserResponseDto getUser(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
 
+    @AdminOnly
     @PutMapping("/{userId}/toggleEnabled")
     public ResponseEntity<UserResponseDto> toggleEnabled(@PathVariable Long userId) {
         UserResponseDto updated = userService.toggleEnabledUser(userId);
         return ResponseEntity.ok(updated);
     }
 
+    @AdminOnly
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);

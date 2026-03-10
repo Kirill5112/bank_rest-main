@@ -34,7 +34,7 @@ public class AuthService {
 
     public UserResponseDto register(RegisterDto dto) {
         User user = mapper.map(dto, User.class);
-        user.setUsername(dto.getUsername());
+        user.normalizeUsername();
         Role role = roleRepo.findByName("USER")
                 .orElseThrow(() -> new ResourceNotFoundException("Role", "USER"));
         user.getRoles().add(role);
